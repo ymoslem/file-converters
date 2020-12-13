@@ -17,25 +17,41 @@ mytmx = minidom.parse(file)
 
 segments = mytmx.getElementsByTagName('tu')
 
-# number of segments
-print("=>", len(segments), "segments are in the file.")
+langs = []
 
+for segment in segments:
+    tuvs = segment.getElementsByTagName('tuv')
+    for tuv in tuvs:
+        lang = tuv.attributes['xml:lang'].value
+        langs.append(lang.lower())
 
-with open(source_file, "w+") as source_file, open(target_file, "w+") as target_file:
-    for segment in segments:
-        tuvs = segment.getElementsByTagName('tuv')
-        for tuv in tuvs:
-            lang = tuv.attributes['xml:lang'].value
-            if  lang.lower() == source.lower():
-                source_text = tuv.getElementsByTagName('seg')
-                source_text = source_text[0].firstChild.data
-                #print(lang, source)
-                source_file.write(source_text + "\n")
-            elif lang.lower() == target.lower():
-                target_text = tuv.getElementsByTagName('seg')
-                target_text = target_text[0].firstChild.data
-                #print(lang, target, '\n')
-                target_file.write(target_text + "\n")
+langs = set(langs)
 
-print("=> Done! Check the output files at:", source_file.name, target_file.name, sep="\n")
+if source in langs and target in langs:
+            
+    with open(source_file, "w+", encoding='utf-8') as source_file, open(target_file, "w+", encoding='utf-8') as target_file:
+        for segment in segments:
+            tuvs = segment.getElementsByTagName('tuv')
+            for tuv in tuvs:
+                lang = tuv.attributes['xml:lang'].value
+                if  lang.lower() == source.lower():
+                    source_text = tuv.getElementsByTagName('seg')
+                    try:
+                        source_text = source_text[0].firstChild.data
+                        #print(lang, source)
+                    except:
+                        continue
+                    source_file.write(source_text + "\n")
+                elif lang.lower() == target.lower():
+                    target_text = tuv.getElementsByTagName('seg')
+                    try:
+                        target_text = target_text[0].firstChild.data
+                        #print(lang, target, '\n')
+                    except:
+                        continue
+                    target_file.write(target_text + "\n")
 
+    print("=> Done! Check the output files at:", source_file.name, target_file.name, sep="\n")
+
+else:
+    print("Please correct the language codes. Found language codes are:", *langs)    

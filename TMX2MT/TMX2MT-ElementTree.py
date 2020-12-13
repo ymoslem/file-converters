@@ -16,20 +16,37 @@ target_file = file + "." + target
 tree = ET.parse(file)  
 root = tree.getroot()
 
-with open(source_file, "w+") as source_file, open(target_file, "w+") as target_file:
-	for tu in root.iter('tu'):
-	    for tuv in tu.iter('tuv'):
-	        lang = list(tuv.attrib.values())
-	        #print(lang[0])
-	        if lang[0].lower() == source.lower():
-	            for seg in tuv.iter('seg'):
-	                source_text = seg.text
-	                source_file.write(source_text + "\n")
-	                #print(source_text)
-	        elif lang[0].lower() == target.lower():
-	            for seg in tuv.iter('seg'):
-	                target_text = seg.text
-	                target_file.write(target_text + "\n")
-	                #print(target_text)
+langs = []
 
-print("=> Done! Check the output files at:", source_file.name, target_file.name, sep="\n")
+for tu in root.iter('tu'):
+    for tuv in tu.iter('tuv'):
+        lang = list(tuv.attrib.values())
+        langs.append(lang[0].lower())
+
+langs = set(langs)
+
+if source in langs and target in langs:
+    with open(source_file, "w+", encoding='utf-8') as source_file, open(target_file, "w+", encoding='utf-8') as target_file:
+        for tu in root.iter('tu'):
+            for tuv in tu.iter('tuv'):
+                lang = list(tuv.attrib.values())
+                #print(lang[0])
+                if lang[0].lower() == source.lower():
+                    for seg in tuv.iter('seg'):
+                        source_text = seg.text
+                        if source_text == None:
+                            continue
+                        source_file.write(str(source_text) + "\n")
+                        #print(source_text)
+                elif lang[0].lower() == target.lower():
+                    for seg in tuv.iter('seg'):
+                        target_text = seg.text
+                        if target_text == None:
+                            continue
+                        target_file.write(str(target_text) + "\n")
+                        #print(target_text)
+
+    print("=> Done! Check the output files at:", source_file.name, target_file.name, sep="\n")
+
+else:
+    print("Please correct the language codes. Found language codes are:", *langs)
