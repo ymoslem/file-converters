@@ -33,16 +33,18 @@ if source in langs and target in langs:
                 #print(lang[0])
                 if lang[0].lower() == source.lower():
                     for seg in tuv.iter('seg'):
-                        source_text = seg.text
-                        if source_text == None:
-                            continue
+                        source_text = ET.tostring(seg, 'utf-8', method="xml")
+                        source_text = source_text.decode("utf-8")
+                        source_text = re.sub('<.*?>|&lt;.*?&gt;|&quot;|&apos;|{}', ' ', source_text)
+                        source_text = source_text.replace('  ', ' ').strip()
                         source_file.write(str(source_text) + "\n")
                         #print(source_text)
                 elif lang[0].lower() == target.lower():
                     for seg in tuv.iter('seg'):
-                        target_text = seg.text
-                        if target_text == None:
-                            continue
+                        target_text = ET.tostring(seg, 'utf-8', method="xml")
+                        target_text = target_text.decode("utf-8")
+                        target_text = re.sub('<.*?>|&lt;.*?&gt;|&quot;|&apos;|{}', ' ', target_text)
+                        target_text = target_text.replace('  ', ' ').strip()
                         target_file.write(str(target_text) + "\n")
                         #print(target_text)
 
