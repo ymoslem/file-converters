@@ -36,7 +36,7 @@ if source in langs and target in langs:
                         source_text = ET.tostring(seg, 'utf-8', method="xml")
                         source_text = source_text.decode("utf-8")
                         source_text = re.sub('<.*?>|&lt;.*?&gt;|&quot;|&apos;|{}', ' ', source_text)
-                        source_text = source_text.replace('  ', ' ').strip()
+                        source_text = re.sub(r'[ ]{2,}', ' ', source_text).strip()
                         source_file.write(str(source_text) + "\n")
                         #print(source_text)
                 elif lang[0].lower() == target.lower():
@@ -44,7 +44,7 @@ if source in langs and target in langs:
                         target_text = ET.tostring(seg, 'utf-8', method="xml")
                         target_text = target_text.decode("utf-8")
                         target_text = re.sub('<.*?>|&lt;.*?&gt;|&quot;|&apos;|{}', ' ', target_text)
-                        target_text = target_text.replace('  ', ' ').strip()
+                        target_text = re.sub(r'[ ]{2,}', ' ', target_text).strip()
                         target_file.write(str(target_text) + "\n")
                         #print(target_text)
 
