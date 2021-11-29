@@ -35,7 +35,7 @@ if source in langs and target in langs:
                     for seg in tuv.iter('seg'):
                         source_text = ET.tostring(seg, 'utf-8', method="xml")
                         source_text = source_text.decode("utf-8")
-                        source_text = re.sub('<.*?>|&lt;.*?&gt;|&quot;|&apos;|{}', ' ', source_text)
+                        source_text = re.sub('<.*?>|&lt;.*?&gt;|&?(amp|nbsp|quot);|{}', ' ', source_text)
                         source_text = re.sub(r'[ ]{2,}', ' ', source_text).strip()
                         source_file.write(str(source_text) + "\n")
                         #print(source_text)
