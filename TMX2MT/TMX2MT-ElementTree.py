@@ -6,6 +6,7 @@
 import xml
 import xml.etree.ElementTree as ET
 import sys
+import re
 
 file = sys.argv[1]
 source = sys.argv[2]
