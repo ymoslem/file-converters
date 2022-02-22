@@ -1,6 +1,6 @@
-#Convert TMX to MT Source and Target files using XML ElementTree
-#Command: python3 TMX2MT-ElementTree.py <tmx_file_name> <source_lang> <target_lang>
-#Note: <source_lang> <target_lang> must be the actual language codes used in the TMX file.
+# Convert TMX to MT Source and Target files using XML ElementTree
+# Command: python3 TMX2MT-ElementTree.py <tmx_file_name> <source_lang> <target_lang>
+# Note: <source_lang> <target_lang> must be the actual language codes used in the TMX file.
 
 
 import xml
@@ -38,16 +38,15 @@ if source in langs and target in langs:
                         source_text = source_text.decode("utf-8")
                         source_text = re.sub('<.*?>|&lt;.*?&gt;|&?(amp|nbsp|quot);|{}', ' ', source_text)
                         source_text = re.sub(r'[ ]{2,}', ' ', source_text).strip()
-                        source_file.write(str(source_text) + "\n")
-                        #print(source_text)
                 elif lang[0].lower() == target.lower():
                     for seg in tuv.iter('seg'):
                         target_text = ET.tostring(seg, 'utf-8', method="xml")
                         target_text = target_text.decode("utf-8")
                         target_text = re.sub('<.*?>|&lt;.*?&gt;|&quot;|&apos;|{}', ' ', target_text)
                         target_text = re.sub(r'[ ]{2,}', ' ', target_text).strip()
-                        target_file.write(str(target_text) + "\n")
-                        #print(target_text)
+            if source_text != "" and target_text != "":
+                source_file.write(str(source_text) + "\n")
+                target_file.write(str(target_text) + "\n")
 
     print("=> Done! Check the output files at:", source_file.name, target_file.name, sep="\n")
 
